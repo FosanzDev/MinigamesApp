@@ -1,18 +1,22 @@
-package com.fosanzdev.minigamesapp.battleship;
+package com.fosanzdev.minigamesapp.battleship.boardLogic;
+
+import com.fosanzdev.minigamesapp.battleship.gameLogic.Hit;
+import com.fosanzdev.minigamesapp.battleship.shipLogic.Orientation;
+import com.fosanzdev.minigamesapp.battleship.shipLogic.ShipPart;
+import com.fosanzdev.minigamesapp.battleship.shipLogic.VShip;
 
 public class Board {
-    private VShip[][] collisionBoard;
+    private final ShipPart[][] shipBoard;
+    private final Tile[][] tileBoard;
 
     public Board(int xSize, int ySize) {
-        this.collisionBoard = new VShip[xSize][ySize];
-    }
-
-    public VShip[][] getCollisionBoard() {
-        return collisionBoard;
-    }
-
-    public void setCollisionBoard(VShip[][] collisionBoard) {
-        this.collisionBoard = collisionBoard;
+        this.shipBoard = new ShipPart[xSize][ySize];
+        this.tileBoard = new Tile[xSize][ySize];
+        for (int i = 0; i < xSize; i++) {
+            for (int j = 0; j < ySize ; j++) {
+                tileBoard[i][j] = Tile.WATER;
+            }
+        }
     }
 
     /**
@@ -29,26 +33,30 @@ public class Board {
         if (checkCollision(vship, x, y)) {
 
             //if it can, add it to the collisionBoard
-            int area = vship.getShip().getArea();
+            int area = vship.getArea();
             Orientation orientation = vship.getOrientation();
             if (orientation == Orientation.E) {
                 for (int i = 0; i < area; i++) {
-                    collisionBoard[x][y + i] = vship;
+                    shipBoard[x][y + i] = vship.getPart(i);
+                    tileBoard[x][y + i] = Tile.SHIP;
                 }
             }
             else if (orientation == Orientation.W) {
                 for (int i = 0; i < area; i++) {
-                    collisionBoard[x][y - i] = vship;
+                    shipBoard[x][y - i] = vship.getPart(i);
+                    tileBoard[x][y - i] = Tile.SHIP;
                 }
             }
             else if (orientation == Orientation.N) {
                 for (int i = 0; i < area; i++) {
-                    collisionBoard[x - i][y] = vship;
+                    shipBoard[x - i][y] = vship.getPart(i);
+                    tileBoard[x - i][y] = Tile.SHIP;
                 }
             }
             else if (orientation == Orientation.S) {
                 for (int i = 0; i < area; i++) {
-                    collisionBoard[x + i][y] = vship;
+                    shipBoard[x + i][y] = vship.getPart(i);
+                    tileBoard[x + i][y] = Tile.SHIP;
                 }
             }
             return true;
@@ -66,7 +74,7 @@ public class Board {
      */
     public boolean checkCollision(VShip vship, int x, int y) {
         //Get area and orientation of the ship
-        int area = vship.getShip().getArea();
+        int area = vship.getArea();
         Orientation orientation = vship.getOrientation();
 
         //Check if it collides with another ship
@@ -74,14 +82,14 @@ public class Board {
             //If its orientation is E or W, check the Y axis
             if (orientation == Orientation.E) {
                 for (int i = 0; i < area; i++) {
-                    if (collisionBoard[x][y + i] != null) {
+                    if (shipBoard[x][y + i] != null) {
                         return false;
                     }
                 }
             }
             else if (orientation == Orientation.W) {
                 for (int i = 0; i < area; i++) {
-                    if (collisionBoard[x][y - i] != null) {
+                    if (shipBoard[x][y - i] != null) {
                         return false;
                     }
                 }
@@ -90,23 +98,59 @@ public class Board {
             //If its orientation is N or S, check the X axis
             else if (orientation == Orientation.N) {
                 for (int i = 0; i < area; i++) {
-                    if (collisionBoard[x - i][y] != null) {
+                    if (shipBoard[x - i][y] != null) {
                         return false;
                     }
                 }
             }
             else if (orientation == Orientation.S) {
                 for (int i = 0; i < area; i++) {
-                    if (collisionBoard[x + i][y] != null) {
+                    if (shipBoard[x + i][y] != null) {
                         return false;
                     }
                 }
             }
             return true;
 
-        //If this error is thrown, the ship is out of bounds (collides with the borders)
+            //If this error is thrown, the ship is out of bounds (collides with the borders)
         } catch (ArrayIndexOutOfBoundsException e) {
             return false;
+        }
+    }
+
+    public boolean hit(Hit hit) {
+        Tile tile = tileBoard[hit.getX()][hit.getY()];
+        if (tile == Tile.SHIP) {
+            shipBoard[hit.getX()][hit.getY()].hit();
+            tileBoard[hit.getX()][hit.getY()] = Tile.HIT;
+            return true;
+        }
+        else if (tile == Tile.WATER) {
+            tileBoard[hit.getX()][hit.getY()] = Tile.MISS;
+            return false;
+        }
+        return false;
+    }
+
+    public void printBoard(){
+        for (Tile[] tiles : tileBoard) {
+            for (Tile tile : tiles) {
+                switch (tile) {
+                    case WATER:
+                        System.out.print("~ ");
+                        break;
+                    case SHIP:
+                        System.out.print("S ");
+                        break;
+                    case HIT:
+                        System.out.print("X ");
+                        break;
+                    case MISS:
+                        System.out.print("O ");
+                        break;
+                }
+            }
+            System.out.println();
         }
     }
 }
