@@ -5,11 +5,21 @@ import com.fosanzdev.minigamesapp.battleship.shipLogic.Orientation;
 import com.fosanzdev.minigamesapp.battleship.shipLogic.ShipPart;
 import com.fosanzdev.minigamesapp.battleship.shipLogic.VShip;
 
-public class Board {
-    private final ShipPart[][] shipBoard;
-    private final Tile[][] tileBoard;
+import java.util.ArrayList;
+
+public class Board{
+
+    //List all the ships
+    private ArrayList<VShip> ships;
+
+    //List all the ships in the board
+    private ShipPart[][] shipBoard;
+
+    //List all the tiles/hits in the board (water, ship, hit, miss)
+    private Tile[][] tileBoard;
 
     public Board(int xSize, int ySize) {
+        this.ships = new ArrayList<>();
         this.shipBoard = new ShipPart[xSize][ySize];
         this.tileBoard = new Tile[xSize][ySize];
         for (int i = 0; i < xSize; i++) {
@@ -29,6 +39,9 @@ public class Board {
      * @param y Y coordinate
      */
     public boolean addShip(VShip vship, int x, int y) {
+        //Add the ship to the list of ships
+        ships.add(vship);
+
         //Check if the ship can be placed
         if (checkCollision(vship, x, y)) {
 
@@ -121,7 +134,19 @@ public class Board {
     public boolean hit(Hit hit) {
         Tile tile = tileBoard[hit.getX()][hit.getY()];
         if (tile == Tile.SHIP) {
+            //Identify the ship
+            ShipPart part = shipBoard[hit.getX()][hit.getY()];
+            VShip ship = part.getShip();
+
+            //Hit the ship
             shipBoard[hit.getX()][hit.getY()].hit();
+
+            //Check if the ship is sunk
+            if (ship.isSunk()) {
+                ships.remove(ship);
+            }
+
+            //Change the tile to HIT
             tileBoard[hit.getX()][hit.getY()] = Tile.HIT;
             return true;
         }
@@ -132,10 +157,15 @@ public class Board {
         return false;
     }
 
+
+    public boolean allSunk(){
+        return ships.isEmpty();
+    }
+
     public void printBoard(){
-        for (Tile[] tiles : tileBoard) {
-            for (Tile tile : tiles) {
-                switch (tile) {
+        for (int i = 0; i < tileBoard.length; i++) {
+            for (int j = 0; j < tileBoard[i].length; j++) {
+                switch (tileBoard[i][j]) {
                     case WATER:
                         System.out.print("~ ");
                         break;
@@ -154,3 +184,4 @@ public class Board {
         }
     }
 }
+

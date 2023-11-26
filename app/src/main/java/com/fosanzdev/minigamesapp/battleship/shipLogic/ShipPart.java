@@ -15,6 +15,7 @@ public class ShipPart {
 
     public void hit() {
         hit = true;
+        ship.notifyHit();
     }
 
     public VShip getShip() {

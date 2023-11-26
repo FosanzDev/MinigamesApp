@@ -9,11 +9,11 @@ public class Game {
     private static final int BOARD_SIZE = 8;
     private static final int[] SHIPS = new int[] {2, 3, 3, 4, 5};
 
-    private final Player player1;
-    private final Player player2;
+    private Player player1;
+    private Player player2;
 
-    private final Board board1;
-    private final Board board2;
+    private Board board1;
+    private Board board2;
 
     public Game(Player player1, Player player2) {
         this.player1 = player1;
@@ -34,18 +34,26 @@ public class Game {
         //Turn defines which one is playing
         //If it's true, player1 is playing
         boolean turn = true;
+        //allSunk defines if all ships are sunk
         boolean allSunk = false;
         while (!allSunk){
+            //If it's player1 turn, player1 hits player2 board
             if (turn){
                 System.out.println("Player 1 turn");
+                //Get hit from player1
                 Hit hit = player1.getHit();
+                //Hit player2 board
                 board2.hit(hit);
+                //Check if all ships are sunk
+                allSunk = board2.allSunk();
+                //Change turn
                 turn = false;
             }
             else {
                 System.out.println("Player 2 turn");
                 Hit hit = player2.getHit();
                 board1.hit(hit);
+                allSunk = board1.allSunk();
                 turn = true;
             }
 
@@ -54,5 +62,14 @@ public class Game {
             System.out.println("Player 2 board");
             board2.printBoard();
         }
+
+        if (turn){
+            System.out.println("Player 1 won!");
+        }
+        else {
+            System.out.println("Player 2 won!");
+        }
     }
+
 }
+
