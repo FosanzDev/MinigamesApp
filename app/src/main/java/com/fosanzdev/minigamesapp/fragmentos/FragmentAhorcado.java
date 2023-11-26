@@ -12,12 +12,18 @@ import android.view.ViewGroup;
 
 import com.fosanzdev.minigamesapp.R;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class FragmentAhorcado extends Fragment {
-
-
+    private final ArrayList<String> listaPalabras = new ArrayList<>();
 
     public FragmentAhorcado(){
-
+        super(R.layout.fragment_ahorgado);
     }
 
     @Override
@@ -25,11 +31,19 @@ public class FragmentAhorcado extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_ahorgado, container, false);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        crearListaDePalabras();
     }
 
+    public void crearListaDePalabras(){
+        //listaPalabras = new ArrayList<>();
+        InputStream file = getResources().openRawResource(R.raw.words_es);
+        Scanner scanner = new Scanner(file);
+        while(scanner.hasNextLine()) {
+            String s = scanner.nextLine();
+            listaPalabras.add(s);
+        }
+    }
 }
