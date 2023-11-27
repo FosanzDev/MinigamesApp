@@ -18,8 +18,6 @@ import com.fosanzdev.minigamesapp.fragmentos.FragmentTicTacToe;
 
 public class MainActivity extends AppCompatActivity {
     FragmentManager manager;
-    private boolean isDetail;
-    Fragment currentFragment;
     FragmentTransaction fragmentTransaction;
     Fragment fragmentToCome;
     @Override
