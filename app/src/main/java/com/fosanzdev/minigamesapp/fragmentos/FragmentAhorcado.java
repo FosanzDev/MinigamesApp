@@ -9,13 +9,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fosanzdev.minigamesapp.R;
-import com.fosanzdev.minigamesapp.logicaJuegos.LogicaAhorcado;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -53,23 +49,6 @@ public class FragmentAhorcado extends Fragment {
         tvIntentos.setText(intentosOrgininal);
         tvLetras.setText(letrasOriginales);
         tvPalbaraSecreta.setText(palabaraCodigo);
-
-        EditText etLetra = view.findViewById(R.id.etLetra);
-        Button button = view.findViewById(R.id.btJugar);
-        StringBuilder sbLetra = new StringBuilder();
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sbLetra.append(etLetra.getText());
-                if(LogicaAhorcado.LetraUnica(sbLetra.toString()))
-                    Toast.makeText(getActivity(), "The length is correct", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(getActivity(), "It is too long", Toast.LENGTH_SHORT).show();
-
-                //if()
-                //else
-            }
-        });
     }
 
     public void crearListaDePalabras(){
