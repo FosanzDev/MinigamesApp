@@ -6,9 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,9 +15,6 @@ import android.widget.Toast;
 import com.fosanzdev.minigamesapp.R;
 import com.fosanzdev.minigamesapp.logicaJuegos.LogicaAhorcado;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
@@ -48,8 +43,8 @@ public class FragmentAhorcado extends Fragment {
         String letrasOriginales ="";
         //Inicio del juego donde cogemos la palabra de la lsita
         //Y convertimos/ocultamos la palabra
-        String palabraAleatoria = getPalabraDeLista();
-        String palabaraCodigo =ocultarPalabraSecreta(palabraAleatoria.length());
+        String palabraAleatoria = LogicaAhorcado.eliminarAcentos(getPalabraDeLista());
+        String palabaraCodigo =LogicaAhorcado.ocultarPalabraSecreta(palabraAleatoria.length());
         tvIntentos.setText(intentosOrgininal);
         tvLetras.setText(letrasOriginales);
         tvPalbaraSecreta.setText(palabaraCodigo);
@@ -57,18 +52,39 @@ public class FragmentAhorcado extends Fragment {
         EditText etLetra = view.findViewById(R.id.etLetra);
         Button button = view.findViewById(R.id.btJugar);
         StringBuilder sbLetra = new StringBuilder();
+        final String[] letra = new String[1];
+
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ArrayList<Integer> postionDeLetras = new ArrayList<>();
+
                 sbLetra.append(etLetra.getText());
-                if(LogicaAhorcado.LetraUnica(sbLetra.toString()))
-                    Toast.makeText(getActivity(), "The length is correct", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(getActivity(), "It is too long", Toast.LENGTH_SHORT).show();
+                letra[0] = sbLetra.toString();
+                letra[0] = letra[0].toLowerCase();
+                letra[0] = LogicaAhorcado.eliminarAcentos(letra[0]);
+
+                if(LogicaAhorcado.characterUnico(letra[0])) {
+                    //
+                    if(LogicaAhorcado.confirmarLetra(letra[0])){
+                        if(LogicaAhorcado.confirmalSiHayLetra(palabraAleatoria, letra[0])){
+                            postionDeLetras = LogicaAhorcado.getPosLetra(palabraAleatoria, letra[0]);
+                            Toast.makeText(getActivity(), palabraAleatoria, Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(getActivity(), "Este letra no existe", Toast.LENGTH_SHORT).show();
+                            //TODO cambiar el imagen cuando la letra es incorecta
+                        }
+                    }else
+                        Toast.makeText(getActivity(), "El caharcter intorducido no es una letra", Toast.LENGTH_SHORT).show();
+                    //
+                }else
+                    Toast.makeText(getActivity(), "Tenies que introducir UNA letra", Toast.LENGTH_SHORT).show();
 
                 //if()
                 //else
                 sbLetra.setLength(0);
+                postionDeLetras.clear();
             }
         });
     }
@@ -90,12 +106,6 @@ public class FragmentAhorcado extends Fragment {
         return listaPalabras.get(posAleatoria);
     }
 
-    public String ocultarPalabraSecreta(int longitud){
-        StringBuilder palabra = new StringBuilder();
-        for(int i = 0; i < longitud;i++){
-            palabra.append("_");
-        }
-        return palabra.toString();
-    }
+
 
 }
