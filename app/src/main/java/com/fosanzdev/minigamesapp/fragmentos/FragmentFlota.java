@@ -11,14 +11,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fosanzdev.battleship.boardLogic.Board;
+import com.fosanzdev.battleship.boardLogic.BoardBuilder;
 import com.fosanzdev.minigamesapp.R;
 
+import com.fosanzdev.minigamesapp.battleship.adapters.FlotaAdapter;
 import com.fosanzdev.minigamesapp.battleship.board.VBoard;
+import com.fosanzdev.minigamesapp.battleship.board.VBoardBuilder;
 
 public class FragmentFlota extends Fragment {
 
     VBoard cpuBoard;
     VBoard playerBoard;
+    private static int[] ships = {5, 4, 3, 3, 2};
 
     public FragmentFlota() {
         // Required empty public constructor
@@ -28,9 +33,10 @@ public class FragmentFlota extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_flota, container, false);
+        Board board = BoardBuilder.buildRandomBoard(ships, 10, 10);
+        VBoard vBoard = VBoardBuilder.parseBoard(board);
         RecyclerView rvBoard = v.findViewById(R.id.rvBoard);
-        RowAdapter rowAdapter = new RowAdapter(cpuBoard);
-        rvBoard.setAdapter(rowAdapter);
+        rvBoard.setAdapter(new FlotaAdapter(vBoard));
         rvBoard.setHasFixedSize(true);
         return v;
     }

@@ -14,6 +14,9 @@ public class VBoard {
     public VTile[][] getTiles() {
         return tiles;
     }
+    public VTile[][] getEnemyPOV() {
+        return enemyPOV;
+    }
 
     public void setTile(VTile tile, int x, int y){
         tiles[x][y] = tile;

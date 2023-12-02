@@ -12,8 +12,8 @@ public class VTile {
         this.orientation = orientation;
     }
 
-    public VTileResource getResource() {
-        return resource;
+    public int getResource() {
+        return resource.getResource();
     }
 
     public Orientation getOrientation() {
