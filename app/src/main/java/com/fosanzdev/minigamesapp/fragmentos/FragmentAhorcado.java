@@ -48,11 +48,11 @@ public class FragmentAhorcado extends Fragment {
         ImageView ivAhorcadoEstadoImage = view.findViewById(R.id.imageView);
         //Inicio del juego donde cogemos la palabra de la lsita
         //Y convertimos/ocultamos la palabra
-        String palabraAleatoria = LogicaAhorcado.eliminarAcentos(getPalabraDeLista());
-        final String[] palabaraCodigo = {LogicaAhorcado.ocultarPalabraSecreta(palabraAleatoria.length())};
+        final String[] palabraAleatoria = {LogicaAhorcado.eliminarAcentos(getPalabraDeLista())};
+        final String[][] palabaraCodigo = {{LogicaAhorcado.ocultarPalabraSecreta(palabraAleatoria[0].length())}};
         tvIntentos.setText(textNumeIntentos[0]);
         tvLetras.setText(letrasOriginales);
-        tvPalbaraSecreta.setText(palabaraCodigo[0]);
+        tvPalbaraSecreta.setText(palabaraCodigo[0][0]);
 
         EditText etLetra = view.findViewById(R.id.etLetra);
         Button button = view.findViewById(R.id.btJugar);
@@ -84,14 +84,14 @@ public class FragmentAhorcado extends Fragment {
                             letrasUsadas.add(letra[0]);
                             tvLetras.setText(letrasUsadas.toString());
                             if(LogicaAhorcado.confirmarLetra(letra[0])){
-                                if(LogicaAhorcado.confirmalSiHayLetra(palabraAleatoria, letra[0])){
-                                    postionDeLetras[0] = LogicaAhorcado.getPosLetra(palabraAleatoria, letra[0]);
+                                if(LogicaAhorcado.confirmalSiHayLetra(palabraAleatoria[0], letra[0])){
+                                    postionDeLetras[0] = LogicaAhorcado.getPosLetra(palabraAleatoria[0], letra[0]);
                                     //DELETE
-                                    Toast.makeText(getActivity(), palabraAleatoria, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), palabraAleatoria[0], Toast.LENGTH_SHORT).show();
                                     //
-                                    palabaraCodigo[0] = LogicaAhorcado.mostrarLetraCorrecta(palabaraCodigo[0], postionDeLetras[0],letra[0]);
-                                    tvPalbaraSecreta.setText(palabaraCodigo[0]);
-                                    if(palabaraCodigo[0].equals(palabraAleatoria)){
+                                    palabaraCodigo[0][0] = LogicaAhorcado.mostrarLetraCorrecta(palabaraCodigo[0][0], postionDeLetras[0],letra[0]);
+                                    tvPalbaraSecreta.setText(palabaraCodigo[0][0]);
+                                    if(palabaraCodigo[0][0].equals(palabraAleatoria[0])){
                                         Toast.makeText(getActivity(), "HAS GANADO", Toast.LENGTH_SHORT).show();
                                         jugar = false;
                                     }
@@ -117,7 +117,6 @@ public class FragmentAhorcado extends Fragment {
                                         ivAhorcadoEstadoImage.setImageResource(R.drawable.hangman_1);
                                     if(numIntentos[0] == 0)
                                         ivAhorcadoEstadoImage.setImageResource(R.drawable.hangman_0);
-
                                 }
                             }else
                                 Toast.makeText(getActivity(), "El caracter intorducido no es una letra", Toast.LENGTH_SHORT).show();
@@ -125,9 +124,26 @@ public class FragmentAhorcado extends Fragment {
                     }else
                         Toast.makeText(getActivity(), "Tenies que introducir UNA letra", Toast.LENGTH_SHORT).show();
                 }
-
                 sbLetra.setLength(0);
                 postionDeLetras[0].clear();
+            }
+        });
+
+        Button btRestart = view.findViewById(R.id.bt_reinicio);
+        btRestart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                palabraAleatoria[0] = LogicaAhorcado.eliminarAcentos(getPalabraDeLista());
+                palabaraCodigo[0] = new String[]{LogicaAhorcado.ocultarPalabraSecreta(palabraAleatoria[0].length())};
+                letrasUsadas.clear();
+                ivAhorcadoEstadoImage.setImageResource(R.drawable.hangman_6);
+                jugar = true;
+                victoria = false;
+                numIntentos[0] = 6;
+                textNumeIntentos[0] = String.valueOf(numIntentos[0]);
+                tvIntentos.setText(textNumeIntentos[0]);
+                tvLetras.setText(letrasUsadas.toString());
+                tvPalbaraSecreta.setText(palabaraCodigo[0][0]);
             }
         });
     }
