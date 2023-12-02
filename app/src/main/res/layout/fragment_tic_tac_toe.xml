@@ -1,6 +1,247 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layaout_margin="10dp"
+    android:background="@drawable/fondotictactoe">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="cursive"
+        android:text="Tic Tac Toe"
+
+        android:textColor="#cc1234"
+
+        android:textSize="36sp"
+
+        android:textStyle="bold" />
+
+    <RelativeLayout
+
+        android:id="@+id/relative_layout"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/tvTitle"
+
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginBottom="20dp">
+
+        <TextView
+
+            android:id="@+id/tvPlayer"
+
+            android:layout_width="200dp"
+
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="20dp"
+
+            android:text="Player Score"
+
+            android:textAlignment="center"
+
+            android:textColor="@color/black"
+
+            android:textSize="26dp"
+            android:textStyle="bold" />
+
+        <TextView
+
+            android:id="@+id/tvComputer"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/tvPlayer"
+            android:text="Computer Score"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="26dp"
+            android:textStyle="bold" />
+
+        <TextView
+
+            android:id="@+id/tvScorePlayer"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvPlayer"
+            android:layout_marginTop="20dp"
+            android:text="0"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="26dp"
+            android:textStyle="bold" />
+
+        <TextView
+
+            android:id="@+id/tvScoreComputer"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvComputer"
+            android:layout_marginTop="20dp"
+            android:layout_toRightOf="@+id/tvScorePlayer"
+            android:text="0"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="26dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relative_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn1"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginBottom="1.25dp"
+                android:backgroundTint="#F4D03F"
+                android:textSize="26dp"
+                app:cornerRadius="0dp" />
+
+            <Button
+                android:id="@+id/btn2"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginBottom="1.25dp"
+                android:backgroundTint="#F4D03F"
+                android:textSize="26dp"
+                app:cornerRadius="0dp" />
+
+            <Button
+                android:id="@+id/btn3"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginBottom="1.25dp"
+                android:backgroundTint="#F4D03F"
+                android:textSize="26dp"
+                app:cornerRadius="0dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn4"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginBottom="1.25dp"
+                android:backgroundTint="#F4D03F"
+                android:textSize="26dp"
+                app:cornerRadius="0dp" />
+
+            <Button
+                android:id="@+id/btn5"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginBottom="1.25dp"
+                android:backgroundTint="#F4D03F"
+                android:textSize="26dp"
+                app:cornerRadius="0dp" />
+
+            <Button
+                android:id="@+id/btn6"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginBottom="1.25dp"
+                android:backgroundTint="#F4D03F"
+                android:textSize="26dp"
+                app:cornerRadius="0dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn7"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginBottom="1.25dp"
+                android:backgroundTint="#F4D03F"
+                android:textSize="26dp"
+                app:cornerRadius="0dp" />
+
+            <Button
+                android:id="@+id/btn8"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginBottom="1.25dp"
+                android:backgroundTint="#F4D03F"
+                android:textSize="26dp"
+                app:cornerRadius="0dp" />
+
+            <Button
+                android:id="@+id/btn9"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginBottom="1.25dp"
+                android:backgroundTint="#F4D03F"
+                android:textSize="26dp"
+                app:cornerRadius="0dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnPlayAgain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="0dp"
+        android:backgroundTint="#F4D03F"
+        android:text="Play Again"
+        android:textColor="@color/black"
+        android:textSize="26dp"
+        android:textStyle="bold"
+        app:cornerRadius="0dp" />
+
+    <Button
+        android:id="@+id/btnReset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnPlayAgain"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#F4D03F"
+        android:text="Reset"
+        android:textColor="@color/black"
+        android:textSize="26dp"
+        android:textStyle="bold"
+        app:cornerRadius="0dp" />
+</RelativeLayout>
