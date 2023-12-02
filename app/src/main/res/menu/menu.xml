@@ -3,11 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/action_hangman"
         android:icon="@drawable/hangman_icon"
         android:title="iconHangman"
         android:visible="true"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_tictac"
         android:icon="@drawable/tictactoe_icon"
         android:title="iconTicTacToe"
         android:visible="true"
