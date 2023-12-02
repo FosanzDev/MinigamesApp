@@ -46,4 +46,20 @@ public class LogicaAhorcado {
         }
         return posLetras;
     }
+
+    public static String mostrarLetraCorrecta(String palabaraOcultada,ArrayList<Integer> posLetras, String letrra){
+            char[] charArray = palabaraOcultada.toCharArray();
+            char letraAChar = letrra.charAt(0);
+            int pos;
+            for(int i = 0; i < posLetras.size(); i++){
+                pos = posLetras.get(i);
+                charArray[pos] = letraAChar;
+            }
+            return new String(charArray);
+    }
+
+    public static boolean siLetraEnLista(ArrayList<String> arrayDeLetrasUsadas,String letra){
+        return arrayDeLetrasUsadas.contains(letra);
+    }
+
 }

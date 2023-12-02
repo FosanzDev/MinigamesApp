@@ -44,21 +44,21 @@ public class FragmentAhorcado extends Fragment {
         //Inicio del juego donde cogemos la palabra de la lsita
         //Y convertimos/ocultamos la palabra
         String palabraAleatoria = LogicaAhorcado.eliminarAcentos(getPalabraDeLista());
-        String palabaraCodigo =LogicaAhorcado.ocultarPalabraSecreta(palabraAleatoria.length());
+        final String[] palabaraCodigo = {LogicaAhorcado.ocultarPalabraSecreta(palabraAleatoria.length())};
         tvIntentos.setText(intentosOrgininal);
         tvLetras.setText(letrasOriginales);
-        tvPalbaraSecreta.setText(palabaraCodigo);
+        tvPalbaraSecreta.setText(palabaraCodigo[0]);
 
         EditText etLetra = view.findViewById(R.id.etLetra);
         Button button = view.findViewById(R.id.btJugar);
         StringBuilder sbLetra = new StringBuilder();
         final String[] letra = new String[1];
-
-
+        ArrayList<String> letrasUsadas = new ArrayList<>();
+        final ArrayList<Integer>[] postionDeLetras = new ArrayList[]{new ArrayList<>()};
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Integer> postionDeLetras = new ArrayList<>();
+
 
                 sbLetra.append(etLetra.getText());
                 letra[0] = sbLetra.toString();
@@ -67,24 +67,33 @@ public class FragmentAhorcado extends Fragment {
 
                 if(LogicaAhorcado.characterUnico(letra[0])) {
                     //
-                    if(LogicaAhorcado.confirmarLetra(letra[0])){
-                        if(LogicaAhorcado.confirmalSiHayLetra(palabraAleatoria, letra[0])){
-                            postionDeLetras = LogicaAhorcado.getPosLetra(palabraAleatoria, letra[0]);
-                            Toast.makeText(getActivity(), palabraAleatoria, Toast.LENGTH_SHORT).show();
-                        }else {
-                            Toast.makeText(getActivity(), "Este letra no existe", Toast.LENGTH_SHORT).show();
-                            //TODO cambiar el imagen cuando la letra es incorecta
-                        }
-                    }else
-                        Toast.makeText(getActivity(), "El caharcter intorducido no es una letra", Toast.LENGTH_SHORT).show();
-                    //
+                    if(LogicaAhorcado.siLetraEnLista(letrasUsadas,letra[0])){
+                        Toast.makeText(getActivity(), "Este letra ya esta usada", Toast.LENGTH_SHORT).show();
+                    }else{
+                        letrasUsadas.add(letra[0]);
+                        tvLetras.setText(letrasUsadas.toString());
+                        if(LogicaAhorcado.confirmarLetra(letra[0])){
+                            if(LogicaAhorcado.confirmalSiHayLetra(palabraAleatoria, letra[0])){
+                                postionDeLetras[0] = LogicaAhorcado.getPosLetra(palabraAleatoria, letra[0]);
+                                //DELETE
+                                Toast.makeText(getActivity(), palabraAleatoria, Toast.LENGTH_SHORT).show();
+                                //
+                                palabaraCodigo[0] = LogicaAhorcado.mostrarLetraCorrecta(palabaraCodigo[0], postionDeLetras[0],letra[0]);
+                                tvPalbaraSecreta.setText(palabaraCodigo[0]);
+                            }else{
+                                Toast.makeText(getActivity(), "Este letra no existe", Toast.LENGTH_SHORT).show();
+                                //TODO cambiar el imagen cuando la letra es incorecta
+                            }
+                        }else
+                            Toast.makeText(getActivity(), "El caharcter intorducido no es una letra", Toast.LENGTH_SHORT).show();
+                    }
                 }else
                     Toast.makeText(getActivity(), "Tenies que introducir UNA letra", Toast.LENGTH_SHORT).show();
 
                 //if()
                 //else
                 sbLetra.setLength(0);
-                postionDeLetras.clear();
+                postionDeLetras[0].clear();
             }
         });
     }
@@ -109,3 +118,10 @@ public class FragmentAhorcado extends Fragment {
 
 
 }
+/*
+
+ */
+
+/*
+
+ */
