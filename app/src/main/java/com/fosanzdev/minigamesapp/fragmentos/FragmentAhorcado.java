@@ -25,7 +25,11 @@ public class FragmentAhorcado extends Fragment {
     private final ArrayList<String> listaPalabras = new ArrayList<>();
     private boolean jugar;
     private boolean victoria;
+    Random rand;
 
+    /**
+     * Inflación del fragmento de ahorcado
+     */
     public FragmentAhorcado(){
         super(R.layout.fragment_ahorgado);
     }
@@ -63,6 +67,10 @@ public class FragmentAhorcado extends Fragment {
         jugar = true;
         victoria = false;
         button.setOnClickListener(new View.OnClickListener() {
+            /**
+             * El listener que usmaos para coger la letra
+             * @param v El view que era clicked
+             */
             @Override
             public void onClick(View v) {
                 sbLetra.append(etLetra.getText());
@@ -77,7 +85,6 @@ public class FragmentAhorcado extends Fragment {
                     Toast.makeText(getActivity(), "Has ganado", Toast.LENGTH_SHORT).show();
                 }else{
                     if(LogicaAhorcado.characterUnico(letra[0])) {
-                        //
                         if(LogicaAhorcado.siLetraEnLista(letrasUsadas,letra[0])){
                             Toast.makeText(getActivity(), "Este letra ya esta usada", Toast.LENGTH_SHORT).show();
                         }else{
@@ -86,9 +93,6 @@ public class FragmentAhorcado extends Fragment {
                             if(LogicaAhorcado.confirmarLetra(letra[0])){
                                 if(LogicaAhorcado.confirmalSiHayLetra(palabraAleatoria[0], letra[0])){
                                     postionDeLetras[0] = LogicaAhorcado.getPosLetra(palabraAleatoria[0], letra[0]);
-                                    //DELETE
-                                    Toast.makeText(getActivity(), palabraAleatoria[0], Toast.LENGTH_SHORT).show();
-                                    //
                                     palabaraCodigo[0][0] = LogicaAhorcado.mostrarLetraCorrecta(palabaraCodigo[0][0], postionDeLetras[0],letra[0]);
                                     tvPalbaraSecreta.setText(palabaraCodigo[0][0]);
                                     if(palabaraCodigo[0][0].equals(palabraAleatoria[0])){
@@ -131,6 +135,10 @@ public class FragmentAhorcado extends Fragment {
 
         Button btRestart = view.findViewById(R.id.bt_reinicio);
         btRestart.setOnClickListener(new View.OnClickListener() {
+            /**
+             * El litstener que usamos para resetar el jeugo
+             * @param v El view que era clicked
+             */
             @Override
             public void onClick(View v) {
                 palabraAleatoria[0] = LogicaAhorcado.eliminarAcentos(getPalabraDeLista());
@@ -148,6 +156,9 @@ public class FragmentAhorcado extends Fragment {
         });
     }
 
+    /**
+     * Un metodo void que llena el arraylist de palabras
+     */
     public void crearListaDePalabras(){
         InputStream file = getResources().openRawResource(R.raw.words_es);
         Scanner scanner = new Scanner(file);
@@ -156,8 +167,15 @@ public class FragmentAhorcado extends Fragment {
             listaPalabras.add(s);
         }
     }
+
+    /**
+     * El metodo coje una palabara aleatoria de la lista y devulvela, usando un random para
+     * eligir una posicion aleotorea para despues usar el get para cojer una palabra
+     * del arraylist
+     * @return un String, la palabra secreta
+     */
     public String getPalabraDeLista(){
-        Random rand = new Random();
+        rand = new Random();
         int min = 0;
         int max = listaPalabras.size();
 
