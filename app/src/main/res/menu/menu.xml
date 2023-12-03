@@ -15,6 +15,7 @@
         android:visible="true"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_battleship"
         android:icon="@drawable/battleship_icon"
         android:title="iconFlota"
         android:visible="true"
