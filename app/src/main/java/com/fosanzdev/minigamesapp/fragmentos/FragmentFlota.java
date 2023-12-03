@@ -1,11 +1,14 @@
 package com.fosanzdev.minigamesapp.fragmentos;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,16 +19,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fosanzdev.battleship.boardLogic.Board;
 import com.fosanzdev.battleship.boardLogic.BoardBuilder;
+import com.fosanzdev.battleship.gameLogic.Hit;
 import com.fosanzdev.minigamesapp.R;
 
 import com.fosanzdev.minigamesapp.battleship.adapters.FlotaAdapter;
-import com.fosanzdev.minigamesapp.battleship.board.VBoard;
 import com.fosanzdev.minigamesapp.battleship.board.VBoardBuilder;
 import com.fosanzdev.minigamesapp.battleship.game.Game;
 import com.fosanzdev.minigamesapp.battleship.game.HumanPlayer;
 import com.fosanzdev.minigamesapp.battleship.game.Player;
-
-import kotlinx.coroutines.scheduling.Task;
 
 public class FragmentFlota extends Fragment implements Game.GameListener, FlotaAdapter.OnTileClickListener {
     private static int[] ships = {5, 4, 3, 3, 2};
@@ -34,11 +35,17 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
 
     Player player;
     Player cpu;
+    Player nowPlaying;
+
     Game game;
+    Hit selectedTile;
+    ImageView ivSelectedTile;
+    FlotaAdapter adapter;
 
     TextView tvNowPlaying;
     Button bFire;
     Button bRestart;
+    RecyclerView rvBoard;
 
     View.OnClickListener fireListener;
     View.OnClickListener restartListener;
@@ -64,14 +71,16 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
         cpu.setvBoard(VBoardBuilder.parseBoard(cpuBoard));
 
         //Setting up RecyclerView for player board
-        RecyclerView rvBoard = v.findViewById(R.id.rvBoard);
+        rvBoard = v.findViewById(R.id.rvBoard);
         rvBoard.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         });
-        rvBoard.setAdapter(new FlotaAdapter(player.getvBoard(), getContext(), rvBoard, this));
+
+        adapter = new FlotaAdapter(player.getvBoard(), getContext(), rvBoard, this);
+        rvBoard.setAdapter(adapter);
         rvBoard.setHasFixedSize(true);
 
         //Setting up Ids
@@ -127,8 +136,19 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
 
     @Override
     public void onGameStart() {
+        if (nowPlaying == player) {
+            tvNowPlaying.setText("Your turn!");
+        }
+        else {
+            tvNowPlaying.setText("CPU's turn!");
+            adapter.updateBoard(cpu.getvBoard(), false);
+        }
+
         bFire.setOnClickListener(v -> {
-            //TODO: Fire logic
+            if (nowPlaying == player) {
+                onTurnChange(cpu);
+            } else
+                onTurnChange(player);
         });
         tvNowPlaying.setText("Your turn!");
     }
@@ -140,11 +160,34 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
 
     @Override
     public void onTurnChange(Player comingPlayer) {
-
+        if (ivSelectedTile != null) removeFilters(ivSelectedTile);
+        ivSelectedTile = null;
+        selectedTile = null;
+        nowPlaying = comingPlayer;
+        if (nowPlaying == player) {
+            tvNowPlaying.setText("Your turn!");
+            adapter.updateBoard(player.getvBoard(), true);
+        }
+        else {
+            tvNowPlaying.setText("CPU's turn!");
+            adapter.updateBoard(cpu.getvBoard(), false);
+        }
     }
 
     @Override
-    public void onTileClick(int x, int y) {
-        System.out.println("Clicked on: " + x + ", " + y);
+    public void onTileClick(int x, int y, ImageView ivTile) {
+        selectedTile = new Hit(x, y);
+        //Set a blue filter to the selected tile
+        if (ivSelectedTile != null) {
+            removeFilters(ivSelectedTile);
+        }
+        ivSelectedTile = ivTile;
+        ivSelectedTile.setColorFilter(Color.argb(100, 255, 0,0), PorterDuff.Mode.OVERLAY);
+        char letter = (char) (x + 65);
+        tvNowPlaying.setText("You clicked on " + letter + " " + (y+1));
+    }
+
+    public void removeFilters(ImageView ivTile) {
+        ivTile.setColorFilter(Color.argb(0, 0, 0,0), PorterDuff.Mode.OVERLAY);
     }
 }

@@ -1,5 +1,6 @@
 package com.fosanzdev.minigamesapp.battleship.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,19 +20,26 @@ import com.fosanzdev.minigamesapp.battleship.game.Game;
 public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>{
 
     public interface OnTileClickListener{
-        void onTileClick(int row, int column);
+        void onTileClick(int row, int column, ImageView ivTile);
     }
 
-    private final VBoard board;
+    private VBoard board;
     private final Context context;
     private RecyclerView rvBoard;
     private final OnTileClickListener listener;
+    private boolean visible = true;
 
     public FlotaAdapter(VBoard board, Context context, RecyclerView rvBoard, OnTileClickListener listener){
         this.board = board;
         this.context = context;
         this.rvBoard = rvBoard;
         this.listener = listener;
+    }
+
+    public void updateBoard(VBoard board, boolean isPlayer){
+        this.board = board;
+        visible = isPlayer;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -43,6 +51,7 @@ public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>
     }
 
     @Override
+    @SuppressLint("RecyclerView")
     public void onBindViewHolder(@NonNull BoardHolder holder, int position) {
         rvBoard.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -50,12 +59,14 @@ public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>
                 rvBoard.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 int width = rvBoard.getWidth();
                 int height = rvBoard.getHeight();
-                System.out.println("Width: " + width);
-                System.out.println("Height: " + height);
-                System.out.println("Using: " + (Math.min(width, height)));
                 int numColumns = board.getTiles().length;
                 int imageSize = Math.min(width, height) / numColumns;
-                holder.bindRow(board.getTiles()[position], imageSize);
+                if (!visible){
+                    holder.bindRow(board.getEnemyPOV()[position], imageSize);
+                    return;
+                }
+                else
+                    holder.bindRow(board.getTiles()[position], imageSize);
             }
         });
     }
@@ -105,7 +116,7 @@ public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>
 
                 int finalI = i;
                 ivTile.setOnClickListener(v -> {
-                    listener.onTileClick(getAdapterPosition(), finalI);
+                    listener.onTileClick(getAdapterPosition(), finalI, ivTile);
                 });
 
                 llRow.addView(ivTile);
