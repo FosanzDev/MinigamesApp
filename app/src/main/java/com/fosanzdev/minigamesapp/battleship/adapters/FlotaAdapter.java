@@ -36,9 +36,9 @@ public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>
         this.listener = listener;
     }
 
-    public void updateBoard(VBoard board, boolean isPlayer){
+    public void updateBoard(VBoard board, boolean visible){
         this.board = board;
-        visible = isPlayer;
+        this.visible = visible;
         notifyDataSetChanged();
     }
 

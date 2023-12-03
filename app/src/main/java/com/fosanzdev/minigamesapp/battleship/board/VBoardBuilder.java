@@ -66,10 +66,10 @@ public class VBoardBuilder {
         VTile[][] vEnemyPOV = new VTile[tiles.length][tiles[0].length];
         for (int i = 0; i < tiles.length; i++){
             for (int j = 0; j < tiles[0].length; j++){
-                    vEnemyPOV[i][j] = new VTile(VTileResource.WATER, Orientation.N);
+                    vEnemyPOV[i][j] = new VTile(VTileResource.UNKNOWN, Orientation.N);
             }
         }
 
-        return new VBoard(vTiles, vEnemyPOV);
+        return new VBoard(board, vTiles, vEnemyPOV);
     }
 }

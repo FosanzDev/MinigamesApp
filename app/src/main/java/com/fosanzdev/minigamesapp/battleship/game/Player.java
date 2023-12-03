@@ -1,6 +1,7 @@
 package com.fosanzdev.minigamesapp.battleship.game;
 
 import com.fosanzdev.battleship.boardLogic.Board;
+import com.fosanzdev.battleship.gameLogic.Hit;
 import com.fosanzdev.minigamesapp.battleship.board.VBoard;
 
 public abstract class Player {
@@ -14,6 +15,10 @@ public abstract class Player {
         this.vBoard = vBoard;
     }
 
+    public Player(String name){
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
@@ -24,5 +29,9 @@ public abstract class Player {
 
     public void setvBoard(VBoard vBoard) {
         this.vBoard = vBoard;
+    }
+
+    public void hit(Hit hit){
+        vBoard.hit(hit);
     }
 }

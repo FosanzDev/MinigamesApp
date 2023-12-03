@@ -9,6 +9,7 @@ public class Game {
         void onGameStart();
         void onGameEnd();
         void onTurnChange(Player comingPlayer);
+        void onHit(Hit hit);
     }
 
     private final GameListener listener;
@@ -27,5 +28,14 @@ public class Game {
 
     public void start(){
         listener.onGameStart();
+    }
+
+    public void manageHit(Hit hit, boolean isPlayer){
+        if (isPlayer)
+            player1.hit(hit);
+        else
+            player2.hit(hit);
+
+        listener.onHit(hit);
     }
 }
