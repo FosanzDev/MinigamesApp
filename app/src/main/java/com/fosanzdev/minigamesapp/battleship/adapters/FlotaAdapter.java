@@ -14,18 +14,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fosanzdev.minigamesapp.R;
 import com.fosanzdev.minigamesapp.battleship.board.VBoard;
 import com.fosanzdev.minigamesapp.battleship.board.VTile;
+import com.fosanzdev.minigamesapp.battleship.game.Game;
 
 public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>{
 
+    public interface OnTileClickListener{
+        void onTileClick(int row, int column);
+    }
+
     private final VBoard board;
     private final Context context;
-
     private RecyclerView rvBoard;
+    private final OnTileClickListener listener;
 
-    public FlotaAdapter(VBoard board, Context context, RecyclerView rvBoard){
+    public FlotaAdapter(VBoard board, Context context, RecyclerView rvBoard, OnTileClickListener listener){
         this.board = board;
         this.context = context;
         this.rvBoard = rvBoard;
+        this.listener = listener;
     }
 
     @NonNull
@@ -33,7 +39,7 @@ public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>
     public BoardHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.battleship_row, parent, false);
-        return new BoardHolder(v, context);
+        return new BoardHolder(v, context, listener);
     }
 
     @Override
@@ -60,15 +66,15 @@ public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>
     }
 
     static class BoardHolder extends RecyclerView.ViewHolder{
-
         private final Context context;
-
         private final LinearLayout llRow;
+        private final OnTileClickListener listener;
 
 
-        public BoardHolder(@NonNull View itemView, Context context) {
+        public BoardHolder(@NonNull View itemView, Context context, OnTileClickListener listener) {
             super(itemView);
             this.context = context;
+            this.listener = listener;
             llRow = itemView.findViewById(R.id.llbattleshipRow);
         }
 
@@ -96,6 +102,12 @@ public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>
                         ivTile.setRotation(270);
                         break;
                 }
+
+                int finalI = i;
+                ivTile.setOnClickListener(v -> {
+                    listener.onTileClick(getAdapterPosition(), finalI);
+                });
+
                 llRow.addView(ivTile);
             }
         }
