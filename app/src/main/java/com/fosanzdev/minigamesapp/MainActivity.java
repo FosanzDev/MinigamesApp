@@ -46,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
             cambiarFragment(fragmentToCome);
             return  true;
         }else if(itemID == R.id.action_tictac){
-
+            fragmentToCome = new FragmentTicTacToe();
+            cambiarFragment(fragmentToCome);
+            return  true;
         }
         return false;
     }
