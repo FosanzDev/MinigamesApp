@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.fosanzdev.minigamesapp.fragmentos.FragmentAhorcado;
+import com.fosanzdev.minigamesapp.fragmentos.FragmentFlota;
 import com.fosanzdev.minigamesapp.fragmentos.FragmentStart;
 import com.fosanzdev.minigamesapp.fragmentos.FragmentTicTacToe;
 
@@ -45,8 +46,10 @@ public class MainActivity extends AppCompatActivity {
             fragmentToCome = new FragmentAhorcado();
             cambiarFragment(fragmentToCome);
             return  true;
-        }else if(itemID == R.id.action_tictac){
-
+        }else if(itemID == R.id.action_battleship){
+            fragmentToCome = new FragmentFlota();
+            cambiarFragment(fragmentToCome);
+            return true;
         }
         return false;
     }

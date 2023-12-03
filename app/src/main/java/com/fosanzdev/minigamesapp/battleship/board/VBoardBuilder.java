@@ -26,7 +26,10 @@ public class VBoardBuilder {
                     }
                     else {
                         //Ship body
-                        vTiles[i][j] = new VTile(VTileResource.SHIP_BODY_1, orientation);
+                        if (orientation == Orientation.N || orientation == Orientation.S)
+                            vTiles[i][j] = i%2 == 0 ? new VTile(VTileResource.SHIP_BODY_1, orientation) : new VTile(VTileResource.SHIP_BODY_2, orientation);
+                        else
+                            vTiles[i][j] = j%2 == 0 ? new VTile(VTileResource.SHIP_BODY_1, orientation) : new VTile(VTileResource.SHIP_BODY_2, orientation);
                     }
                 } else {
                     //Water
@@ -36,9 +39,9 @@ public class VBoardBuilder {
         }
 
         VTile[][] vEnemyPOV = new VTile[tiles.length][tiles[0].length];
-        for (VTile[] vTile : vTiles) {
-            for (int j = 0; j < vTiles[0].length; j++) {
-                vEnemyPOV[vTiles.length - 1 - vTile.length][j] = new VTile(VTileResource.UNKNOWN, Orientation.N);
+        for (int i = 0; i < tiles.length; i++){
+            for (int j = 0; j < tiles[0].length; j++){
+                    vEnemyPOV[i][j] = new VTile(VTileResource.WATER, Orientation.N);
             }
         }
 
