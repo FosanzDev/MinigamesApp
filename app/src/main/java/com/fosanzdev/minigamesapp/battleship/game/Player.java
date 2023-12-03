@@ -31,7 +31,7 @@ public abstract class Player {
         this.vBoard = vBoard;
     }
 
-    public void hit(Hit hit){
-        vBoard.hit(hit);
+    public boolean hit(Hit hit){
+        return vBoard.hit(hit);
     }
 }

@@ -10,6 +10,7 @@ public class Game {
         void onGameEnd();
         void onTurnChange(Player comingPlayer);
         void onHit(Hit hit);
+        void onInvalidHit();
     }
 
     private final GameListener listener;
@@ -30,12 +31,16 @@ public class Game {
         listener.onGameStart();
     }
 
-    public void manageHit(Hit hit, boolean isPlayer){
-        if (isPlayer)
-            player1.hit(hit);
-        else
-            player2.hit(hit);
+    public void manageHit(Hit hit, Player player){
+        //Check if the hit is not repeated
+        boolean valid;
 
-        listener.onHit(hit);
+        if (player == player1) valid = player2.hit(hit);
+        else valid =  player1.hit(hit);
+
+        if (!valid)
+            listener.onInvalidHit();
+        else
+            listener.onHit(hit);
     }
 }

@@ -26,8 +26,13 @@ public class VBoard {
     public void setTile(VTile tile, int x, int y){
         tiles[x][y] = tile;
     }
-    public void hit(Hit hit){
-        tiles[hit.getX()][hit.getY()].hit();
-        enemyPOV[hit.getX()][hit.getY()].hit();
+    public boolean hit(Hit hit){
+        VTile visibleTile = tiles[hit.getX()][hit.getY()];
+        if (enemyPOV[hit.getX()][hit.getY()].hiddenHit(visibleTile)){
+            visibleTile.normalHit();
+            return true;
+        }else{
+            return false;
+        }
     }
 }

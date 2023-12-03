@@ -104,11 +104,7 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
                 tvNowPlaying.setText("You must select a tile first!");
                 return;
             }
-            if (nowPlaying == player) {
-                game.manageHit(selectedTile, true);
-            } else {
-                game.manageHit(selectedTile, false);
-            }
+            game.manageHit(selectedTile, nowPlaying);
         };
 
         changePlayerListener = v -> {
@@ -152,7 +148,6 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
         t.start();
 
         bFire.setOnClickListener(v -> {
-            bFire.setText("Fire!");
             t.interrupt();
             game.start();
         });
@@ -160,8 +155,11 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
 
     @Override
     public void onGameStart() {
+        //Player starts first
         onTurnChange(player);
 
+        //Set the listener for the fire button
+        bFire.setText("Fire!");
         bFire.setOnClickListener(fireListener);
     }
 
@@ -195,10 +193,15 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
 
     @Override
     public void onHit(Hit hit) {
-        adapter.updateBoard(nowPlaying == player ? cpu.getvBoard() : player.getvBoard(), true);
+        adapter.updateBoard(nowPlaying == player ? cpu.getvBoard() : player.getvBoard(), nowPlaying != player);
         bFire.setText("Next");
         bFire.setEnabled(true);
         bFire.setOnClickListener(changePlayerListener);
+    }
+
+    @Override
+    public void onInvalidHit(){
+        tvNowPlaying.setText("You already hit that tile!");
     }
 
     private void startCpuTurn(){
@@ -211,7 +214,7 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
                 rvBoard.post(() -> {
                     LinearLayout llRow = (LinearLayout) rvBoard.getChildAt(cpuHit.getX());
                     ImageView ivTile = (ImageView) llRow.getChildAt(cpuHit.getY());
-                    ivTile.performClick();
+                    selectTile(cpuHit.getX(), cpuHit.getY(), ivTile);
                 });
                 Thread.sleep(1000);
                 tvNowPlaying.post(() -> tvNowPlaying.setText("CPU is FIREING!"));
@@ -227,9 +230,12 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
 
     @Override
     public void onTileClick(int x, int y, ImageView ivTile) {
-        if (!selectionEnabled)
-            if (nowPlaying == player || nowPlaying == null)
-                return;
+        if (nowPlaying == cpu || nowPlaying == null)
+            return;
+        selectTile(x, y, ivTile);
+    }
+
+    public void selectTile(int x, int y, ImageView ivTile) {
         selectedTile = new Hit(x, y);
         //Set a blue filter to the selected tile
         if (ivSelectedTile != null) {

@@ -1,5 +1,7 @@
 package com.fosanzdev.minigamesapp.battleship.board;
 
+import static com.fosanzdev.minigamesapp.battleship.board.VTileResource.SHIP_NOSE;
+
 import com.fosanzdev.battleship.shipLogic.Orientation;
 
 public class VTile {
@@ -16,6 +18,10 @@ public class VTile {
         return resource.getResource();
     }
 
+    public VTileResource getVTileResource() {
+        return resource;
+    }
+
     public Orientation getOrientation() {
         return orientation;
     }
@@ -28,7 +34,7 @@ public class VTile {
         this.resource = resource;
     }
 
-    public void hit() {
+    public void normalHit() {
         switch (resource) {
             case SHIP_NOSE:
                 resource = VTileResource.SHIP_DAMAGED_NOSE;
@@ -43,9 +49,27 @@ public class VTile {
                 resource = VTileResource.SHIP_DAMAGED_BACK;
                 break;
             case WATER:
-            case UNKNOWN:
                 resource = VTileResource.HIT;
                 break;
+        }
+    }
+
+    public boolean hiddenHit(VTile vTile) {
+        switch (vTile.getVTileResource()){
+            case WATER:
+                resource = VTileResource.WATER;
+                return true;
+
+            case SHIP_DAMAGED_BACK:
+            case SHIP_DAMAGED_BODY_1:
+            case SHIP_DAMAGED_BODY_2:
+            case SHIP_DAMAGED_NOSE:
+            case HIT:
+                return false;
+
+            default:
+                resource = VTileResource.HIT;
+                return true;
         }
     }
 }
