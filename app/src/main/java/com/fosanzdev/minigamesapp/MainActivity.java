@@ -32,12 +32,24 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.flMainView, new FragmentStart());
         fragmentTransaction.commit();
     }
+    /**
+     * metodo que crea el menu
+     * @param menu The options menu in which you place your items.
+     *
+     * @return verdadero para crear el menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);
         return true;
     }
-
+    /**
+     *
+     * @param item La opción del menu que era elgida permite
+     *             el cambio del fragmento par
+     *
+     * @return verdadero en caso que eligimos un item que es un icono del menu
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         manager = getSupportFragmentManager();
@@ -57,6 +69,14 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+    /**
+     * El metodo permite el cambio de los fragmentos con el fragmentTransaction que
+     * es un variable global para que el metedo puede accderlo  cuando llamamos
+     * en vez de crear de nuevo cada vez que cambiamos fragmentos
+     * @param fragment que Usamos la Clase del Fragmento en onOptionItemSelecte
+     *                 para fragmentTransaction para intercambiar entre los fragmentos
+     */
+
     private void cambiarFragment(Fragment fragment){
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.flMainView, fragment);
