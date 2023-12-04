@@ -1,5 +1,6 @@
 package com.fosanzdev.minigamesapp.battleship.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +15,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fosanzdev.minigamesapp.R;
 import com.fosanzdev.minigamesapp.battleship.board.VBoard;
 import com.fosanzdev.minigamesapp.battleship.board.VTile;
+import com.fosanzdev.minigamesapp.battleship.game.Game;
 
 public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>{
 
-    private final VBoard board;
+    public interface OnTileClickListener{
+        void onTileClick(int row, int column, ImageView ivTile);
+    }
+
+    private VBoard board;
     private final Context context;
-
     private RecyclerView rvBoard;
+    private final OnTileClickListener listener;
+    private boolean visible = true;
 
-    public FlotaAdapter(VBoard board, Context context, RecyclerView rvBoard){
+    public FlotaAdapter(VBoard board, Context context, RecyclerView rvBoard, OnTileClickListener listener){
         this.board = board;
         this.context = context;
         this.rvBoard = rvBoard;
+        this.listener = listener;
+    }
+
+    public void updateBoard(VBoard board, boolean visible){
+        this.board = board;
+        this.visible = visible;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -33,10 +47,11 @@ public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>
     public BoardHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.battleship_row, parent, false);
-        return new BoardHolder(v, context);
+        return new BoardHolder(v, context, listener);
     }
 
     @Override
+    @SuppressLint("RecyclerView")
     public void onBindViewHolder(@NonNull BoardHolder holder, int position) {
         rvBoard.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -44,12 +59,14 @@ public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>
                 rvBoard.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 int width = rvBoard.getWidth();
                 int height = rvBoard.getHeight();
-                System.out.println("Width: " + width);
-                System.out.println("Height: " + height);
-                System.out.println("Using: " + (Math.min(width, height)));
                 int numColumns = board.getTiles().length;
                 int imageSize = Math.min(width, height) / numColumns;
-                holder.bindRow(board.getTiles()[position], imageSize);
+                if (!visible){
+                    holder.bindRow(board.getEnemyPOV()[position], imageSize);
+                    return;
+                }
+                else
+                    holder.bindRow(board.getTiles()[position], imageSize);
             }
         });
     }
@@ -60,15 +77,15 @@ public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>
     }
 
     static class BoardHolder extends RecyclerView.ViewHolder{
-
         private final Context context;
-
         private final LinearLayout llRow;
+        private final OnTileClickListener listener;
 
 
-        public BoardHolder(@NonNull View itemView, Context context) {
+        public BoardHolder(@NonNull View itemView, Context context, OnTileClickListener listener) {
             super(itemView);
             this.context = context;
+            this.listener = listener;
             llRow = itemView.findViewById(R.id.llbattleshipRow);
         }
 
@@ -96,6 +113,12 @@ public class FlotaAdapter extends RecyclerView.Adapter<FlotaAdapter.BoardHolder>
                         ivTile.setRotation(270);
                         break;
                 }
+
+                int finalI = i;
+                ivTile.setOnClickListener(v -> {
+                    listener.onTileClick(getAdapterPosition(), finalI, ivTile);
+                });
+
                 llRow.addView(ivTile);
             }
         }
