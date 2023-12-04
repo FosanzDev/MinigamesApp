@@ -22,6 +22,9 @@ public class VBoard {
     public VTile[][] getEnemyPOV() {
         return enemyPOV;
     }
+    public Board getBoard() {
+        return board;
+    }
 
     public void setTile(VTile tile, int x, int y){
         tiles[x][y] = tile;
@@ -30,9 +33,15 @@ public class VBoard {
         VTile visibleTile = tiles[hit.getX()][hit.getY()];
         if (enemyPOV[hit.getX()][hit.getY()].hiddenHit(visibleTile)){
             visibleTile.normalHit();
+            board.hit(hit);
             return true;
         }else{
             return false;
         }
+    }
+
+    public void visibilizeTile(int x, int y){
+        enemyPOV[x][y].setResource(tiles[x][y].getVTileResource());
+        enemyPOV[x][y].setOrientation(tiles[x][y].getOrientation());
     }
 }

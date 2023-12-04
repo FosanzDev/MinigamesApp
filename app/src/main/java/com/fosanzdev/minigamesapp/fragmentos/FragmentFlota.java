@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +33,8 @@ import com.fosanzdev.minigamesapp.battleship.game.Player;
 
 public class FragmentFlota extends Fragment implements Game.GameListener, FlotaAdapter.OnTileClickListener {
     private static int[] ships = {5, 4, 3, 3, 2};
-    private static int BOARD_SIZE_X = 10;
-    private static int BOARD_SIZE_Y = 10;
+    private static int BOARD_SIZE_X = 8;
+    private static int BOARD_SIZE_Y = 8;
 
     private Player player;
     private CpuPlayer cpu;
@@ -165,7 +166,12 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
 
     @Override
     public void onGameEnd() {
+        selectionEnabled = false;
+        bFire.setEnabled(false);
+        bFire.setText("Game Over!");
+        bFire.setOnClickListener(null);
 
+        tvNowPlaying.setText("Game Over -- " + (nowPlaying == player ? "You won!" : "You lost!"));
     }
 
     @Override
@@ -180,7 +186,7 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
         if (nowPlaying == player) {
             selectionEnabled = true;
             tvNowPlaying.setText("Your turn!");
-            adapter.updateBoard(cpu.getvBoard(), false);;
+            adapter.updateBoard(cpu.getvBoard(), false);
         }
         else {
             selectionEnabled = false;
@@ -192,7 +198,7 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
     }
 
     @Override
-    public void onHit(Hit hit) {
+    public void onHit() {
         adapter.updateBoard(nowPlaying == player ? cpu.getvBoard() : player.getvBoard(), nowPlaying != player);
         bFire.setText("Next");
         bFire.setEnabled(true);
@@ -200,8 +206,28 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
     }
 
     @Override
+    public void onShipHit(){
+        tvNowPlaying.setText("Ship hit!");
+    }
+
+    @Override
+    public void onMiss(){
+        tvNowPlaying.setText("Miss!");
+    }
+
+    @Override
     public void onInvalidHit(){
         tvNowPlaying.setText("You already hit that tile!");
+    }
+
+    @Override
+    public void onShipSunk() {
+        tvNowPlaying.setText("Ship sunk!");
+    }
+
+    @Override
+    public Player getNowPlaying() {
+        return nowPlaying;
     }
 
     private void startCpuTurn(){
@@ -221,7 +247,7 @@ public class FragmentFlota extends Fragment implements Game.GameListener, FlotaA
                 Thread.sleep(1000);
                 tvNowPlaying.post(() -> bFire.performClick());
             } catch (InterruptedException e) {
-                System.out.println("Interrupted");
+                Log.i("Game", "CPU Dialog interrupted");
                 return;
             }
         });
